@@ -1,27 +1,28 @@
-﻿using Producer;
+﻿using KafkaConnection;
+using KafkaConnection.Producer;
 
 namespace FileLoader
 {
     internal class FileProcessorService
     {
         private readonly Topic _uncleanedRecordsTopic = new Topic("UncleanedRecords");
-        private readonly IKafkaConnection _kafkaConnection;
+        private readonly IKafkaProducerConnection _kafkaProducerConnection;
 
-        public FileProcessorService(IKafkaConnection kafkaConnection)
+        public FileProcessorService(IKafkaProducerConnection kafkaProducerConnection)
         {
-            _kafkaConnection = kafkaConnection;
+            _kafkaProducerConnection = kafkaProducerConnection;
         }
 
         public void Init()
         {
-            _kafkaConnection.Init();
+            _kafkaProducerConnection.Init();
         }
 
         public void RegisterFileForCleaning(IFileOnDisk fileToProcess)
         {
             foreach (var record in fileToProcess.Lines())
             {
-                _kafkaConnection.PublishMessage(_uncleanedRecordsTopic, record);
+                _kafkaProducerConnection.PublishMessage(_uncleanedRecordsTopic, record);
             }
         }
     }

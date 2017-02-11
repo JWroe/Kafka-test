@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Producer
+namespace KafkaConnection
 {
     public interface IJsonSerializedObject
     {

@@ -1,6 +1,6 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace Producer
+namespace KafkaConnection
 {
     public interface IDeserializedObject<out T> where T : class
     {

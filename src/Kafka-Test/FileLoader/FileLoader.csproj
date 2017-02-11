@@ -66,9 +66,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Producer\Producer.csproj">
+    <ProjectReference Include="..\Producer\KafkaConnection.csproj">
       <Project>{7F13E302-7CB7-4CBA-866C-E1261077A4ED}</Project>
-      <Name>Producer</Name>
+      <Name>KafkaConnection</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

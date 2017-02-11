@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{7F13E302-7CB7-4CBA-866C-E1261077A4ED}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Producer</RootNamespace>
-    <AssemblyName>Producer</AssemblyName>
+    <RootNamespace>KafkaConnection</RootNamespace>
+    <AssemblyName>KafkaConnection</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -57,16 +57,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IDeserializedObject.cs" />
+    <Compile Include="Consumer\IKafkaConsumerConnection.cs" />
+    <Compile Include="DeserializedObject.cs" />
     <Compile Include="IKafkaConfiguration.cs" />
+    <Compile Include="Producer\IKafkaProducerConnection.cs" />
     <Compile Include="ISerializedObject.cs" />
     <Compile Include="ITopic.cs" />
-    <Compile Include="IKafkaConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

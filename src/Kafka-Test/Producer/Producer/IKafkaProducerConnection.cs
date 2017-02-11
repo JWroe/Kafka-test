@@ -2,24 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using System.Threading;
 using Confluent.Kafka;
 using Confluent.Kafka.Serialization;
 using NUnit.Framework;
 
-namespace Producer
+namespace KafkaConnection.Producer
 {
-    public interface IKafkaConnection
+    public interface IKafkaProducerConnection
     {
         void Init();
         void PublishMessage(ITopic topic, string objectToSend);
     }
 
-    public class KafkaConnection : IKafkaConnection
+    public class KafkaProducerConnection : IKafkaProducerConnection, IDisposable
     {
         private readonly IKafkaConfiguration _config;
 
-        public KafkaConnection(IKafkaConfiguration config)
+        public KafkaProducerConnection(IKafkaConfiguration config)
         {
             _config = config;
         }
@@ -28,12 +27,18 @@ namespace Producer
 
         public void Init()
         {
-            _kafka = new Producer<Null, string>(_config.ConfigDictionary, null, new StringSerializer(Encoding.UTF8));
+            _kafka = new Producer<Null, string>(_config.ProducerConfig, null, new StringSerializer(Encoding.UTF8));
         }
 
         public void PublishMessage(ITopic topic, string objectToSend)
         {
             _kafka.ProduceAsync(topic.Name, null, objectToSend);
+        }
+
+        public void Dispose()
+        {
+            _kafka.Flush();
+            _kafka.Dispose();
         }
     }
 
@@ -48,7 +53,7 @@ namespace Producer
 
             var testTopic = Guid.NewGuid().ToString();
 
-            var connection = new KafkaConnection(new KafkaConfiguration(kafkaServer));
+            var connection = new KafkaProducerConnection(new KafkaConfiguration(kafkaServer));
             connection.Init();
             connection.PublishMessage(new Topic(testTopic), testString);
 
@@ -60,7 +65,7 @@ namespace Producer
                                      { "api.version.request", true }
                                  };
 
-            using (var consumer = new Consumer(consumerConfig))
+            using (var consumer = new Confluent.Kafka.Consumer(consumerConfig))
             {
                 consumer.Assign(new List<TopicPartitionOffset> { new TopicPartitionOffset(testTopic, partition: 0, offset: Offset.Beginning) });
 

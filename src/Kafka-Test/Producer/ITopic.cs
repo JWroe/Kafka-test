@@ -1,4 +1,4 @@
-namespace Producer
+namespace KafkaConnection
 {
     public interface ITopic
     {

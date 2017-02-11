@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using KafkaConnection;
 using NullGuard;
-using Producer;
 
 [assembly: NullGuard(ValidationFlags.All)]
 
@@ -10,10 +10,11 @@ namespace FileLoader
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            var kafkaConnection = new KafkaConnection(new KafkaConfiguration(ConfigurationManager.AppSettings["KafkaServer"]));
-            var service = new FileProcessorService(kafkaConnection);
+            var config = new KafkaConfiguration(ConfigurationManager.AppSettings["KafkaServer"]);
+            var producerConnection = new KafkaConnection.Producer.KafkaProducerConnection(config);
+            var service = new FileProcessorService(producerConnection);
             service.Init();
 
             while (true)
