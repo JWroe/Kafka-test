@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaConnection", "Producer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileLoader", "FileLoader\FileLoader.csproj", "{44524C01-6887-4D3A-A972-980CBF617010}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecordChecker", "RecordChecker\RecordChecker.csproj", "{FA566CD0-4F42-4FDE-A840-C47030DD0BD2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{44524C01-6887-4D3A-A972-980CBF617010}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44524C01-6887-4D3A-A972-980CBF617010}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44524C01-6887-4D3A-A972-980CBF617010}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA566CD0-4F42-4FDE-A840-C47030DD0BD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA566CD0-4F42-4FDE-A840-C47030DD0BD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA566CD0-4F42-4FDE-A840-C47030DD0BD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA566CD0-4F42-4FDE-A840-C47030DD0BD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
