@@ -10,26 +10,15 @@ namespace FileLoader
 
     internal class IFileOnDisk_SampleCsvFile : IFileOnDisk
     {
-        public string Content()
+        private readonly string _content;
+
+        public IFileOnDisk_SampleCsvFile(string content)
         {
-            return "this is line 1\n this is line 2\n this, is, split";
+            _content = content;
         }
 
-        public IEnumerable<IEnumerable<string>> Csv() => new List<IEnumerable<string>>
-                                                         {
-                                                             new List<string> { "this is line 1" },
-                                                             new List<string> { " this is line 2" },
-                                                             new List<string> { " this", " is", " split" },
-                                                         };
+        public string Content() => _content;
 
-        public IEnumerable<string> Lines()
-        {
-            return new List<string>
-                   {
-                       "this is line 1",
-                       " this is line 2",
-                       " this, is, split"
-                   };
-        }
+        public IEnumerable<string> Lines() => _content.Split('\n');
     }
 }

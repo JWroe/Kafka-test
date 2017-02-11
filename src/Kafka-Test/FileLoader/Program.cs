@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NullGuard;
+
+[assembly: NullGuard(ValidationFlags.All)]
 
 namespace FileLoader
 {
@@ -6,14 +8,16 @@ namespace FileLoader
     {
         static void Main(string[] args)
         {
-            while (true)
-            {
-                Console.WriteLine("Enter the path of your file to process...");
-                var path = Console.ReadLine();
-                //var uncleanFile = new UncleanFile(new CsvFile(new FileOnDisk(path)));
+            //var service = new FileProcessorService(new KafkaConfiguration(ConfigurationManager.AppSettings["KafkaServer"]));
+            //service.Init();
 
-                //var kafkaConnection = new KafkaConnection(new KafkaConfiguration(ConfigurationManager.AppSettings["KafkaServer"]));
-            }
+            //Console.WriteLine("Enter the path of your csv file to process...");
+            //var path = Console.ReadLine();
+
+            //if (File.Exists(path))
+            //{
+            //    service.RegisterFileForCleaning(path);
+            //}
         }
     }
 }

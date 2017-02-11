@@ -1,17 +1,9 @@
-﻿using System;
-using FileLoader;
+﻿using System.Collections.Generic;
 
-namespace IFileOnDisk
+namespace FileLoader
 {
     internal interface IUncleanFile
     {
-    }
-
-    internal class UncleanFile : IUncleanFile
-    {
-        public UncleanFile(ICsvFile csvFile)
-        {
-            throw new NotImplementedException();
-        }
+        IEnumerable<Record> Records();
     }
 }

@@ -25,11 +25,16 @@ namespace FileLoader
         [Test]
         public void FileContentTest()
         {
-            var fakeFileOnDisk = new IFileOnDisk_SampleCsvFile();
-
+            var fakeFileOnDisk = new IFileOnDisk_SampleCsvFile("this is line 1\n this is line 2\n this, is, split");
+            var expected = new List<IEnumerable<string>>
+                           {
+                               new List<string> { "this is line 1" },
+                               new List<string> { " this is line 2" },
+                               new List<string> { " this", " is", " split" },
+                           };
             var csvFile = new CsvFile(fakeFileOnDisk);
 
-            Assert.That(csvFile.Content(), Is.EqualTo(fakeFileOnDisk.Csv()));
+            Assert.That(csvFile.Content(), Is.EqualTo(expected));
         }
     }
 }
