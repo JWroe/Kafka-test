@@ -1,10 +1,10 @@
-﻿using NUnit.Framework;
-using Producer;
+﻿using Producer;
 
 namespace FileLoader
 {
     internal class FileProcessorService
     {
+        private readonly Topic _uncleanedRecordsTopic = new Topic("UncleanedRecords");
         private readonly IKafkaConnection _kafkaConnection;
 
         public FileProcessorService(IKafkaConnection kafkaConnection)
@@ -17,16 +17,12 @@ namespace FileLoader
             _kafkaConnection.Init();
         }
 
-        public void RegisterFileForCleaning(IUncleanFile fileToProcess)
+        public void RegisterFileForCleaning(IFileOnDisk fileToProcess)
         {
-        }
-    }
-
-    internal class FileProcessingServiceTests
-    {
-        [Test]
-        public void RegisterFileForCleaningTest()
-        {
+            foreach (var record in fileToProcess.Lines())
+            {
+                _kafkaConnection.PublishMessage(_uncleanedRecordsTopic, record);
+            }
         }
     }
 }

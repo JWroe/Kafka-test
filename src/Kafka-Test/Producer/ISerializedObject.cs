@@ -1,28 +1,22 @@
-﻿using System.Text;
+﻿using Newtonsoft.Json;
 
 namespace Producer
 {
-    public interface ISerializedObject
+    public interface IJsonSerializedObject
     {
-        byte[] Value { get; }
+        string Value { get; }
     }
 
-    public class SerializedString : ISerializedObject
+    public class JsonSerializedObject : IJsonSerializedObject
     {
-        private byte[] _value;
-        private readonly string _input;
-        private readonly Encoding _encoding;
+        private readonly object _object;
+        private string _value;
 
-        public SerializedString(string input) : this(input, Encoding.UTF8)
+        public JsonSerializedObject(object obj)
         {
+            _object = obj;
         }
 
-        public SerializedString(string input, Encoding encoding)
-        {
-            _input = input;
-            _encoding = encoding;
-        }
-
-        public byte[] Value => _value ?? (_value = _encoding.GetBytes(_input));
+        public string Value => _value ?? (_value = JsonConvert.SerializeObject(_object));
     }
 }

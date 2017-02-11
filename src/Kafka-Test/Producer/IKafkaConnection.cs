@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
+using System.Threading;
 using Confluent.Kafka;
 using Confluent.Kafka.Serialization;
 using NUnit.Framework;
@@ -10,7 +12,7 @@ namespace Producer
     public interface IKafkaConnection
     {
         void Init();
-        void PublishMessage(ITopic topic, ISerializedObject objectToSend);
+        void PublishMessage(ITopic topic, string objectToSend);
     }
 
     public class KafkaConnection : IKafkaConnection
@@ -22,24 +24,16 @@ namespace Producer
             _config = config;
         }
 
-        private Producer<Null, byte[]> _kafka;
+        private Producer<Null, string> _kafka;
 
         public void Init()
         {
-            _kafka = new Producer<Null, byte[]>(_config.ConfigDictionary, null, new NonSerializer());
+            _kafka = new Producer<Null, string>(_config.ConfigDictionary, null, new StringSerializer(Encoding.UTF8));
         }
 
-        public void PublishMessage(ITopic topic, ISerializedObject objectToSend)
+        public void PublishMessage(ITopic topic, string objectToSend)
         {
-            _kafka.ProduceAsync(topic.Name, null, objectToSend.Value);
-        }
-
-        private class NonSerializer : ISerializer<byte[]>
-        {
-            public byte[] Serialize(byte[] data)
-            {
-                return data;
-            }
+            _kafka.ProduceAsync(topic.Name, null, objectToSend);
         }
     }
 
@@ -50,12 +44,13 @@ namespace Producer
         public void SimpleProduceConsume()
         {
             const string testString = "hello world";
-            const string testTopic = "testtopic";
             const string kafkaServer = "192.168.0.92";
+
+            var testTopic = Guid.NewGuid().ToString();
 
             var connection = new KafkaConnection(new KafkaConfiguration(kafkaServer));
             connection.Init();
-            connection.PublishMessage(new Topic(testTopic), new SerializedString(testString));
+            connection.PublishMessage(new Topic(testTopic), testString);
 
             var consumerConfig = new Dictionary<string, object>
                                  {
@@ -68,9 +63,21 @@ namespace Producer
             using (var consumer = new Consumer(consumerConfig))
             {
                 consumer.Assign(new List<TopicPartitionOffset> { new TopicPartitionOffset(testTopic, partition: 0, offset: Offset.Beginning) });
-                Assert.That(consumer.Consume(out Message message, TimeSpan.FromSeconds(10)), Is.True);
-                Assert.That(testString, Is.EqualTo(Encoding.UTF8.GetString(message.Value, 0, message.Value.Length)));
-                Assert.That(null, Is.EqualTo(message.Key));
+
+                var watch = Stopwatch.StartNew();
+                while (true)
+                {
+                    if (watch.Elapsed >= TimeSpan.FromSeconds(10))
+                    {
+                        Assert.Fail();
+                    }
+                    if (consumer.Consume(out Message message, TimeSpan.FromSeconds(10)))
+                    {
+                        Assert.That(testString, Is.EqualTo(Encoding.UTF8.GetString(message.Value, 0, message.Value.Length)));
+                        Assert.That(null, Is.EqualTo(message.Key));
+                        break;
+                    }
+                }
             }
         }
     }
