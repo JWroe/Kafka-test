@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FileLoader
 {
@@ -14,20 +10,10 @@ namespace FileLoader
             {
                 Console.WriteLine("Enter the path of your file to process...");
                 var path = Console.ReadLine();
-                var uncleanFile = new UncleanFile(new FileOnDisk(path));
+                //var uncleanFile = new UncleanFile(new CsvFile(new FileOnDisk(path)));
+
+                //var kafkaConnection = new KafkaConnection(new KafkaConfiguration(ConfigurationManager.AppSettings["KafkaServer"]));
             }
-
-        }
-    }
-
-    internal class FileOnDisk
-    {
-        private readonly string _path;
-
-        public FileOnDisk(string path)
-        {
-            _path = path;
-            
         }
     }
 }
