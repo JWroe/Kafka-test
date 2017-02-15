@@ -15,18 +15,20 @@ namespace FileLoader
         {
             var config = new KafkaConfiguration(ConfigurationManager.AppSettings["KafkaServer"]);
             var producerConnection = new KafkaProducerConnection(config);
-            var service = new FileProcessorService(producerConnection);
+            var topic = new Topic("my-topic");
+            var service = new FileProcessorService(producerConnection, topic);
             service.Init();
 
+            Console.WriteLine($"topic - {topic.Name}");
             while (true)
             {
-                Console.WriteLine("Enter the path of your csv file to process...");
-                var path = Console.ReadLine();
-
-                if (File.Exists(path))
+                Console.WriteLine("Enter the number of messages to publish...");
+                if (int.TryParse(Console.ReadLine(), out int num))
                 {
-                    var file = new FileOnDisk(path);
-                    service.RegisterFileForCleaning(file);
+                    for (var i = 0; i < num; i++)
+                    {
+                        producerConnection.PublishMessageAsync(topic, $"Message #{i}");
+                    }
                 }
             }
         }

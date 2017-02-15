@@ -10,7 +10,7 @@ namespace KafkaConnection.Consumer
         void Init();
     }
 
-    public class KafkaConsumerConnection : IKafkaConsumerConnection
+    public class KafkaConsumerConnection : IKafkaConsumerConnection, IDisposable
     {
         private readonly IKafkaConfiguration _config;
         private Confluent.Kafka.Consumer _kafkaConsumer;
@@ -25,17 +25,22 @@ namespace KafkaConnection.Consumer
             _kafkaConsumer = new Confluent.Kafka.Consumer(_config.ConsumerConfig);
         }
 
-        public IEnumerable<string> GetMessages(ITopic topic)
+        public IEnumerable<string> Messages(ITopic topic)
         {
             _kafkaConsumer.Assign(new List<TopicPartitionOffset> { new TopicPartitionOffset(topic.Name, partition: 0, offset: Offset.Beginning) });
 
             while (true)
             {
-                if (_kafkaConsumer.Consume(out Message message, TimeSpan.FromSeconds(10)))
+                if (_kafkaConsumer.Consume(out Message message, TimeSpan.FromMilliseconds(10)))
                 {
                     yield return Encoding.UTF8.GetString(message.Value, 0, message.Value.Length);
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _kafkaConsumer?.Dispose();
         }
     }
 }

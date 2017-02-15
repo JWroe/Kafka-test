@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Threading.Tasks;
 using Confluent.Kafka;
 using Confluent.Kafka.Serialization;
 using NUnit.Framework;
@@ -11,7 +12,7 @@ namespace KafkaConnection.Producer
     public interface IKafkaProducerConnection
     {
         void Init();
-        void PublishMessage(ITopic topic, string objectToSend);
+        Task PublishMessageAsync(ITopic topic, string objectToSend);
     }
 
     public class KafkaProducerConnection : IKafkaProducerConnection, IDisposable
@@ -30,9 +31,9 @@ namespace KafkaConnection.Producer
             _kafka = new Producer<Null, string>(_config.ProducerConfig, null, new StringSerializer(Encoding.UTF8));
         }
 
-        public void PublishMessage(ITopic topic, string objectToSend)
+        public Task PublishMessageAsync(ITopic topic, string objectToSend)
         {
-            _kafka.ProduceAsync(topic.Name, null, objectToSend);
+            return _kafka.ProduceAsync(topic.Name, null, objectToSend);
         }
 
         public void Dispose()
@@ -49,13 +50,13 @@ namespace KafkaConnection.Producer
         public void SimpleProduceConsume()
         {
             const string testString = "hello world";
-            const string kafkaServer = "192.168.0.92";
+            const string kafkaServer = "192.168.0.91";
 
             var testTopic = Guid.NewGuid().ToString();
 
             var connection = new KafkaProducerConnection(new KafkaConfiguration(kafkaServer));
             connection.Init();
-            connection.PublishMessage(new Topic(testTopic), testString);
+            connection.PublishMessageAsync(new Topic(testTopic), testString).Wait();
 
             var consumerConfig = new Dictionary<string, object>
                                  {
