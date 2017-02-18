@@ -36,6 +36,11 @@ namespace KafkaConnection.Producer
             return _kafka.ProduceAsync(topic.Name, null, objectToSend);
         }
 
+        public void Flush()
+        {
+            _kafka.Flush();
+        }
+
         public void Dispose()
         {
             _kafka.Flush();

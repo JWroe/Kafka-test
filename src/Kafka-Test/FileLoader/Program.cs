@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using System.Text;
+using Confluent.Kafka;
+using Confluent.Kafka.Serialization;
 using KafkaConnection;
 using KafkaConnection.Producer;
 using NullGuard;
@@ -14,20 +17,18 @@ namespace FileLoader
         static void Main()
         {
             var config = new KafkaConfiguration(ConfigurationManager.AppSettings["KafkaServer"]);
-            var producerConnection = new KafkaProducerConnection(config);
-            var topic = new Topic("my-topic");
-            var service = new FileProcessorService(producerConnection, topic);
-            service.Init();
-
-            Console.WriteLine($"topic - {topic.Name}");
-            while (true)
+            using (var producerConnection = new Producer<Null, string>(config.ProducerConfig, null, new StringSerializer(Encoding.UTF8)))
             {
-                Console.WriteLine("Enter the number of messages to publish...");
-                if (int.TryParse(Console.ReadLine(), out int num))
+                while (true)
                 {
-                    for (var i = 0; i < num; i++)
+                    Console.WriteLine("Enter the number of messages to publish...");
+                    if (int.TryParse(Console.ReadLine(), out int num))
                     {
-                        producerConnection.PublishMessageAsync(topic, $"Message #{i}");
+                        for (var i = 0; i < num; i++)
+                        {
+                            producerConnection.ProduceAsync("my-topic", null, $"Message #{i}");
+                        }
+                        producerConnection.Flush();
                     }
                 }
             }
