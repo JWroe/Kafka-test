@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Confluent.Kafka;
 
-namespace KafkaConnection.Consumer
+namespace Kafka.Consumer
 {
     public interface IKafkaConsumerConnection
     {

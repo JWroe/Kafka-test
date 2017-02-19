@@ -7,7 +7,7 @@ using Confluent.Kafka;
 using Confluent.Kafka.Serialization;
 using NUnit.Framework;
 
-namespace KafkaConnection.Producer
+namespace Kafka.Producer
 {
     public interface IKafkaProducerConnection
     {

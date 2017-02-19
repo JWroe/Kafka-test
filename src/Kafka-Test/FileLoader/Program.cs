@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Configuration;
-using System.IO;
-using System.Text;
-using Confluent.Kafka;
-using Confluent.Kafka.Serialization;
-using KafkaConnection;
-using KafkaConnection.Producer;
-using NullGuard;
-
-[assembly: NullGuard(ValidationFlags.All)]
+using Kafka;
+using Kafka.Producer;
 
 namespace FileLoader
 {
@@ -16,9 +9,11 @@ namespace FileLoader
     {
         static void Main()
         {
+            var topic = new Topic("my-topic");
             var config = new KafkaConfiguration(ConfigurationManager.AppSettings["KafkaServer"]);
-            using (var producerConnection = new Producer<Null, string>(config.ProducerConfig, null, new StringSerializer(Encoding.UTF8)))
+            using (var producerConnection = new KafkaProducerConnection(config))
             {
+                producerConnection.Init();
                 while (true)
                 {
                     Console.WriteLine("Enter the number of messages to publish...");
@@ -26,7 +21,7 @@ namespace FileLoader
                     {
                         for (var i = 0; i < num; i++)
                         {
-                            producerConnection.ProduceAsync("my-topic", null, $"Message #{i}");
+                            producerConnection.PublishMessageAsync(topic, "Test");
                         }
                         producerConnection.Flush();
                     }

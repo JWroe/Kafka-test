@@ -1,4 +1,4 @@
-namespace KafkaConnection
+namespace Kafka
 {
     public interface ITopic
     {

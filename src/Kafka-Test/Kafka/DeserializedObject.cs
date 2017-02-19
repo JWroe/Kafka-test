@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace KafkaConnection
+namespace Kafka
 {
     public interface IDeserializedObject<out T> where T : class
     {

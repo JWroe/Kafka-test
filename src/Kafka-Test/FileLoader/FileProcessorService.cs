@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using KafkaConnection;
-using KafkaConnection.Producer;
+using Kafka;
+using Kafka.Producer;
 
 namespace FileLoader
 {

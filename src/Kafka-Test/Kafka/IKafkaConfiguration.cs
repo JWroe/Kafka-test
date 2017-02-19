@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace KafkaConnection
+namespace Kafka
 {
     public interface IKafkaConfiguration
     {
