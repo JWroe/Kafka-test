@@ -22,9 +22,7 @@ namespace FileLoader
 
         public IEnumerable<string> Lines()
         {
-            var i = 0;
-            while (true)
-                yield return $"{i++},{Guid.NewGuid()},Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat";
+            return File.ReadLines(_path);
         }
     }
 
