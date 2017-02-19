@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using Kafka;
@@ -15,24 +16,18 @@ namespace FileLoader
             var config = new KafkaConfiguration(ConfigurationManager.AppSettings["KafkaServer"]);
             using (var producerConnection = new KafkaProducerConnection(config))
             {
-                producerConnection.Init();
+                var service = new FileProcessorService(producerConnection, topic);
+                service.Init();
+
                 while (true)
                 {
                     Console.WriteLine("Enter the location of a file to parse...");
                     var path = Console.ReadLine();
-                    var metric = new TimeMetric();
                     if (File.Exists(path))
                     {
-                        metric = metric.RunningMetric();
-                        var file = new FileOnDisk(path);
-                        foreach (var line in file.Lines())
-                        {
-                            producerConnection.PublishMessageAsync(topic, line);
-                            metric = metric.Increment();
-                        }
-                        producerConnection.Flush();
-                        metric = metric.StoppedMetric();
-                        Console.WriteLine($"{metric.Count} records produced in {metric.TimeTaken}");
+                        var fileOnDisk = new FileOnDisk(path);
+                        service.RegisterFileForCleaning(fileOnDisk);
+                        Console.WriteLine($"{service.LastFileMetrics.Count} records produced in {service.LastFileMetrics.TimeTaken}, {service.LastFileMetrics.Count / service.LastFileMetrics.TimeTaken.TotalSeconds} records per second");
                     }
                     else
                     {

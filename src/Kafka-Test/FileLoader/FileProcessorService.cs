@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Kafka;
+﻿using Kafka;
 using Kafka.Producer;
 
 namespace FileLoader
@@ -16,6 +14,8 @@ namespace FileLoader
             _topic = topic;
         }
 
+        public TimeMetric LastFileMetrics { get; set; }
+
         public void Init()
         {
             _kafkaProducerConnection.Init();
@@ -23,16 +23,14 @@ namespace FileLoader
 
         public void RegisterFileForCleaning(IFileOnDisk fileToProcess)
         {
-            var i = 0;
+            LastFileMetrics = new TimeMetric().RunningMetric();
             foreach (var line in fileToProcess.Lines())
             {
-                i++;
-                if (i % 100 == 0)
-                {
-                    Console.WriteLine(i);
-                }
-                
+                _kafkaProducerConnection.PublishMessageAsync(_topic, line);
+                LastFileMetrics = LastFileMetrics.Increment();
             }
+            _kafkaProducerConnection.Flush();
+            LastFileMetrics = LastFileMetrics.StoppedMetric();
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Kafka.Producer
     {
         void Init();
         Task PublishMessageAsync(ITopic topic, string objectToSend);
+        void Flush();
     }
 
     public class KafkaProducerConnection : IKafkaProducerConnection, IDisposable
