@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using Kafka;
 using Kafka.Producer;
 

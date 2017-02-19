@@ -29,7 +29,6 @@ namespace FileLoader
                 _kafkaProducerConnection.PublishMessageAsync(_topic, line);
                 LastFileMetrics = LastFileMetrics.Increment();
             }
-            _kafkaProducerConnection.Flush();
             LastFileMetrics = LastFileMetrics.StoppedMetric();
         }
     }
