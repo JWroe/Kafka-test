@@ -66,5 +66,10 @@
       <Name>Kafka</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="sample-files\first-column-100,000-rows.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
