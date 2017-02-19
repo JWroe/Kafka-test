@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace FileLoader
+namespace Kafka
 {
-    internal class TimeMetric
+    public class TimeMetric
     {
         private readonly Stopwatch _stopwatch;
 
