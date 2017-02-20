@@ -28,7 +28,9 @@ namespace Kafka
                                                                 { "group.id", "simple-produce-consume" },
                                                                 { "bootstrap.servers", _server },
                                                                 { "session.timeout.ms", 6000 },
-                                                                { "api.version.request", true }
+                                                                { "api.version.request", true },
+                                                                { "auto.commit.interval.ms", 1000 },
+                                                                { "enable.auto.commit", true }
                                                             };
     }
 }

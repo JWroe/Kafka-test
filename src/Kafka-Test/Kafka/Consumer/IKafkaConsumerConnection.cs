@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using Confluent.Kafka;
 
 namespace Kafka.Consumer
@@ -40,10 +39,6 @@ namespace Kafka.Consumer
             {
                 if (_kafkaConsumer.Consume(out Message message, TimeSpan.FromMilliseconds(100)))
                 {
-                    if (message.Offset % 5 == 0)
-                    {
-                        _kafkaConsumer.CommitAsync(message);
-                    }
                     yield return Encoding.UTF8.GetString(message.Value, 0, message.Value.Length);
                 }
                 else

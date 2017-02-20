@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     # Consumer configuration
     # See https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
-    conf = {'bootstrap.servers': "localhost", 'group.id': "grp1", 'session.timeout.ms': 6000,
+    conf = {'bootstrap.servers': "192.168.0.85", 'group.id': "grp1", 'session.timeout.ms': 6000,
             'default.topic.config': {'auto.offset.reset': 'smallest'}}
 
     # Create Consumer instance

@@ -301,3 +301,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/librdkafka-0.9.3
